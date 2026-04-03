@@ -1,14 +1,9 @@
-/**
- * @file Dashboard.jsx
- * @description Nexus — Strategic Feature Intelligence Dashboard
- * Redesigned: Light enterprise SaaS, animated, production-grade.
- * Person A — Layer 5
- */
+
 
 import React, { useState, useEffect, useRef } from "react";
 import { useTelemetry } from "../context/TelemetryContext.jsx";
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
+
 const T = {
   bg: "#F8F9FB",
   surface: "#FFFFFF",
@@ -38,7 +33,7 @@ const T = {
   amberBright: "#FCD34D",
 };
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+
 const ADOPTION_DATA = [
   { id: "compliance", label: "Compliance Check",    rate: 91, events: 5100, trend: +8,  status: "high"    },
   { id: "loan",       label: "Loan Origination",    rate: 87, events: 4320, trend: +12, status: "high"    },
@@ -72,7 +67,7 @@ const STATUS = {
   zombie:  { bar: "#DC2626", bg: "#FEF2F2", label: "Zombie",  dot: "#DC2626" },
 };
 
-// ─── Animated Bar ─────────────────────────────────────────────────────────────
+
 function AnimatedBar({ width, color, delay = 0, height = 8 }) {
   const [w, setW] = useState(0);
   useEffect(() => {
@@ -91,7 +86,7 @@ function AnimatedBar({ width, color, delay = 0, height = 8 }) {
   );
 }
 
-// ─── Animated Number ──────────────────────────────────────────────────────────
+
 function AnimNum({ target, duration = 1400 }) {
   const [val, setVal] = useState(0);
   const t0 = useRef(null);
@@ -111,7 +106,7 @@ function AnimNum({ target, duration = 1400 }) {
   return <>{prefix}{val.toLocaleString()}{suffix}</>;
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
+
 function Sidebar({ active, setActive }) {
   const nav = [
     { id: "overview",   label: "Overview" },
@@ -184,7 +179,7 @@ function Sidebar({ active, setActive }) {
   );
 }
 
-// ─── Top Bar ──────────────────────────────────────────────────────────────────
+
 function TopBar({ page }) {
   const labels = { overview: "Overview", adoption: "Feature Adoption", journeys: "Journey Analytics", governance: "Governance" };
   return (
@@ -215,7 +210,7 @@ function TopBar({ page }) {
   );
 }
 
-// ─── Shared: Section Card ─────────────────────────────────────────────────────
+
 function Card({ title, subtitle, children, style = {} }) {
   const [hover, setHover] = useState(false);
   return (
@@ -248,7 +243,7 @@ function Card({ title, subtitle, children, style = {} }) {
   );
 }
 
-// ─── Page Header ──────────────────────────────────────────────────────────────
+
 function PageHeader({ title, subtitle }) {
   return (
     <div style={{ marginBottom: 32 }}>
@@ -265,7 +260,7 @@ function PageHeader({ title, subtitle }) {
   );
 }
 
-// ─── Overview Page ────────────────────────────────────────────────────────────
+
 function OverviewPage() {
   const [vis, setVis] = useState(false);
   useEffect(() => { setTimeout(() => setVis(true), 50); }, []);
