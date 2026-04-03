@@ -89,7 +89,7 @@ log = logging.getLogger(__name__)
 # ─── Kafka Producer (module-level singleton) ──────────────────────────────────
 
 kafka_producer: Optional[AIOKafkaProducer] = None
-created_topics: set[str] = set()   # Cache so we don't re-create topics every request
+created_topics: set[str] = set()
 
 
 # ─── App Lifespan (startup / shutdown) ───────────────────────────────────────
@@ -102,7 +102,6 @@ async def lifespan(app: FastAPI):
     global kafka_producer
     import asyncio, ssl as _ssl
 
-    # Build SSL context once for Aiven
     ssl_ctx = None
     if KAFKA_USE_SSL:
         ssl_ctx = _ssl.create_default_context()
@@ -270,6 +269,21 @@ def verify_api_key(authorization: Optional[str]):
 
 
 # ─── API Endpoints ────────────────────────────────────────────────────────────
+
+@app.get("/")
+async def root():
+    return {
+        "service": "NEXUS Cloud Ingestor",
+        "version": "1.0.0",
+        "status": "running",
+        "docs": "/api/docs",
+        "health": "/health",
+        "endpoints": {
+            "ingest_cloud_events": "POST /api/v1/events",
+            "ingest_onprem_packets": "POST /api/v1/ingest",
+        }
+    }
+
 
 @app.get("/health")
 async def health_check():
