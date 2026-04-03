@@ -1,13 +1,3 @@
-/**
- * @file feature-taxonomy.js
- * @description Standardized Feature Tagging Taxonomy for InsightOS Ghost SDK.
- * Defines all event types, channels, feature modules, and journey steps.
- * Every event emitted by the SDK must conform to these enums.
- *
- * Person A — Layer 1: Ghost Instrumentation Layer
- */
-
-// ─── Event Types ────────────────────────────────────────────────────────────
 
 /**
  * @enum {string} EVENT_TYPE
@@ -25,7 +15,7 @@ export const EVENT_TYPE = {
   BATCH_TRIGGER: "BATCH_TRIGGER",     // Scheduled/batch channel event
 };
 
-// ─── Channels ────────────────────────────────────────────────────────────────
+
 
 /**
  * @enum {string} CHANNEL
@@ -38,7 +28,7 @@ export const CHANNEL = {
   BATCH: "BATCH",
 };
 
-// ─── Feature Modules ─────────────────────────────────────────────────────────
+
 
 /**
  * @enum {string} FEATURE_MODULE
@@ -56,7 +46,7 @@ export const FEATURE_MODULE = {
   TENANT_MANAGEMENT: "TENANT_MANAGEMENT",
 };
 
-// ─── Journey Definitions ──────────────────────────────────────────────────────
+
 
 /**
  * @enum {string} JOURNEY
@@ -96,22 +86,7 @@ export const JOURNEY_STEPS = {
   ],
 };
 
-// ─── Standardized Event Schema ────────────────────────────────────────────────
 
-/**
- * Creates a fully-typed, taxonomy-compliant event object.
- * Ghost SDK calls this before buffering any event.
- *
- * @param {object} params
- * @param {string} params.eventType       - One of EVENT_TYPE values
- * @param {string} params.featureModule   - One of FEATURE_MODULE values
- * @param {string} params.channel         - One of CHANNEL values
- * @param {string} params.tenantId        - Masked tenant identifier
- * @param {string} [params.journeyId]     - Active journey ID (if in a journey)
- * @param {string} [params.journeyStep]   - Current step name within the journey
- * @param {object} [params.metadata]      - Additional non-PII context
- * @returns {object} Structured, taxonomy-compliant event payload
- */
 export function createEvent({
   eventType,
   featureModule,
