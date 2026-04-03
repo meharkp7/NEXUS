@@ -26,6 +26,8 @@ import json
 import uuid
 import logging
 import os
+import tempfile
+import atexit
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Optional
@@ -41,13 +43,41 @@ from aiokafka.errors import KafkaError, TopicAlreadyExistsError
 
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("NEXUS_KAFKA_BROKERS", "kafka:9092")
 KAFKA_REPLICATION_FACTOR = int(os.environ.get("NEXUS_KAFKA_REPLICATION", 1))
-KAFKA_RETENTION_MS = int(os.environ.get("NEXUS_KAFKA_RETENTION_MS", 604_800_000))  # 7 days
+KAFKA_RETENTION_MS = int(os.environ.get("NEXUS_KAFKA_RETENTION_MS", 604_800_000))
 API_KEY_SECRET = os.environ.get("NEXUS_API_KEY", "dev-secret-key-replace-in-prod")
 
-# Aiven SSL certificate paths (only used when set — falls back to plain for local dev)
+_tmp_cert_files = []
+
+def _write_tmp_cert(content: str, suffix: str) -> str:
+    f = tempfile.NamedTemporaryFile(mode='w', suffix=suffix, delete=False)
+    f.write(content)
+    f.flush()
+    f.close()
+    _tmp_cert_files.append(f.name)
+    return f.name
+
+def _cleanup_tmp_certs():
+    for path in _tmp_cert_files:
+        try:
+            os.unlink(path)
+        except Exception:
+            pass
+
+atexit.register(_cleanup_tmp_certs)
+
 KAFKA_SSL_CAFILE   = os.environ.get("AIVEN_SSL_CAFILE", "")
 KAFKA_SSL_CERTFILE = os.environ.get("AIVEN_SSL_CERTFILE", "")
 KAFKA_SSL_KEYFILE  = os.environ.get("AIVEN_SSL_KEYFILE", "")
+
+_CA_CONTENT   = os.environ.get("AIVEN_SSL_CA", "")
+_CERT_CONTENT = os.environ.get("AIVEN_SSL_CERT", "")
+_KEY_CONTENT  = os.environ.get("AIVEN_SSL_KEY", "")
+
+if _CA_CONTENT and _CERT_CONTENT and _KEY_CONTENT:
+    KAFKA_SSL_CAFILE   = _write_tmp_cert(_CA_CONTENT, ".pem")
+    KAFKA_SSL_CERTFILE = _write_tmp_cert(_CERT_CONTENT, ".cert")
+    KAFKA_SSL_KEYFILE  = _write_tmp_cert(_KEY_CONTENT, ".key")
+
 KAFKA_USE_SSL = bool(KAFKA_SSL_CAFILE and KAFKA_SSL_CERTFILE and KAFKA_SSL_KEYFILE)
 
 logging.basicConfig(

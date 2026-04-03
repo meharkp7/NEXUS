@@ -13,11 +13,11 @@ services:
         sync: false
       - key: NEXUS_KAFKA_BROKERS
         sync: false
-      - key: AIVEN_SSL_CAFILE
-        value: /certs/ca.pem
-      - key: AIVEN_SSL_CERTFILE
-        value: /certs/client.cert
-      - key: AIVEN_SSL_KEYFILE
-        value: /certs/client.key
       - key: NEXUS_KAFKA_REPLICATION
         value: "1"
+      - key: AIVEN_SSL_CA
+        sync: false
+      - key: AIVEN_SSL_CERT
+        sync: false
+      - key: AIVEN_SSL_KEY
+        sync: false
