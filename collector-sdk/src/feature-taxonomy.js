@@ -1,16 +1,14 @@
-
 export const EVENT_TYPE = {
-  FEATURE_OPEN: "FEATURE_OPEN",       // User navigated to / opened a feature
-  FEATURE_SUCCESS: "FEATURE_SUCCESS", // Feature completed its intended action
-  FEATURE_FAIL: "FEATURE_FAIL",       // Feature threw an error or was abandoned
-  JOURNEY_START: "JOURNEY_START",     // User began a multi-step journey
-  JOURNEY_STEP: "JOURNEY_STEP",       // User completed one step within a journey
-  JOURNEY_DROP: "JOURNEY_DROP",       // User abandoned a journey mid-way
-  JOURNEY_COMPLETE: "JOURNEY_COMPLETE", // User completed the full journey
-  API_CALL: "API_CALL",               // Programmatic API invocation (batch/integration)
-  BATCH_TRIGGER: "BATCH_TRIGGER",     // Scheduled/batch channel event
+  FEATURE_OPEN: "FEATURE_OPEN",
+  FEATURE_SUCCESS: "FEATURE_SUCCESS",
+  FEATURE_FAIL: "FEATURE_FAIL",
+  JOURNEY_START: "JOURNEY_START",
+  JOURNEY_STEP: "JOURNEY_STEP",
+  JOURNEY_DROP: "JOURNEY_DROP",
+  JOURNEY_COMPLETE: "JOURNEY_COMPLETE",
+  API_CALL: "API_CALL",
+  BATCH_TRIGGER: "BATCH_TRIGGER",
 };
-
 
 export const CHANNEL = {
   WEB: "WEB",
@@ -18,7 +16,6 @@ export const CHANNEL = {
   API: "API",
   BATCH: "BATCH",
 };
-
 
 export const FEATURE_MODULE = {
   LOAN_ORIGINATION: "LOAN_ORIGINATION",
@@ -31,7 +28,6 @@ export const FEATURE_MODULE = {
   TENANT_MANAGEMENT: "TENANT_MANAGEMENT",
 };
 
-
 export const JOURNEY = {
   LOAN_APPLICATION: "LOAN_APPLICATION",
   KYC_VERIFICATION: "KYC_VERIFICATION",
@@ -39,7 +35,6 @@ export const JOURNEY = {
   LOAN_APPROVAL: "LOAN_APPROVAL",
   DISBURSEMENT: "DISBURSEMENT",
 };
-
 
 export const JOURNEY_STEPS = {
   [JOURNEY.LOAN_APPLICATION]: [
@@ -63,21 +58,26 @@ export const JOURNEY_STEPS = {
   ],
 };
 
+const _FEATURE_OR_JOURNEY = new Set([
+  ...Object.values(FEATURE_MODULE),
+  ...Object.values(JOURNEY),
+]);
 
 export function createEvent({
   eventType,
   featureModule,
   channel,
   tenantId,
+  sessionId,
   journeyId = null,
   journeyStep = null,
   metadata = {},
 }) {
   if (!Object.values(EVENT_TYPE).includes(eventType)) {
-    console.warn(`[InsightOS] Unknown eventType: ${eventType}`);
+    console.warn(`[NEXUS SDK] Unknown eventType: ${eventType}`);
   }
-  if (!Object.values(FEATURE_MODULE).includes(featureModule)) {
-    console.warn(`[InsightOS] Unknown featureModule: ${featureModule}`);
+  if (!_FEATURE_OR_JOURNEY.has(featureModule)) {
+    console.warn(`[NEXUS SDK] Unknown featureModule / journey: ${featureModule}`);
   }
 
   return {
@@ -86,7 +86,8 @@ export function createEvent({
     eventType,
     featureModule,
     channel,
-    tenantId,        // Already masked by masking.js before this is called
+    tenantId,
+    sessionId,
     journeyId,
     journeyStep,
     sdkVersion: "1.0.0",

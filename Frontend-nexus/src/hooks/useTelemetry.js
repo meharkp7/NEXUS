@@ -1,7 +1,7 @@
 
 
 import { useTelemetry } from "../context/TelemetryContext.jsx";
-import { FEATURE_MODULE, JOURNEY } from "../sdk/feature-taxonomy.js";
+import { FEATURE_MODULE, JOURNEY } from "@nexus/collector-sdk";
 
 
 export function useFeatureTelemetry(featureModule) {

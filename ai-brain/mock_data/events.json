@@ -1,11 +1,233 @@
 [
-  {"tenant_id":"T1","feature_id":"KYC","event_type":"FEATURE_OPEN","timestamp":"2026-01-01T10:00:00","session_id":"S1"},
-  {"tenant_id":"T1","feature_id":"KYC","event_type":"FEATURE_SUCCESS","timestamp":"2026-01-01T10:01:00","session_id":"S1"},
-  {"tenant_id":"T1","feature_id":"LOAN","event_type":"FEATURE_OPEN","timestamp":"2026-01-01T10:02:00","session_id":"S1"},
-
-  {"tenant_id":"T2","feature_id":"KYC","event_type":"FEATURE_OPEN","timestamp":"2026-01-01T11:00:00","session_id":"S2"},
-  {"tenant_id":"T2","feature_id":"KYC","event_type":"FEATURE_FAIL","timestamp":"2026-01-01T11:01:00","session_id":"S2"},
-
-  {"tenant_id":"T3","feature_id":"KYC","event_type":"FEATURE_OPEN","timestamp":"2026-01-01T12:00:00","session_id":"S3"},
-  {"tenant_id":"T3","feature_id":"LOAN","event_type":"FEATURE_OPEN","timestamp":"2026-01-01T12:01:00","session_id":"S3"}
+  {
+    "event_id": "demo-e1",
+    "tenant_id": "T1",
+    "session_id": "S1",
+    "feature_id": "KYC",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-01T10:00:00",
+    "metadata": {
+      "story": "Citizens begin KYC flow from portal landing; high traffic indicates strong top-of-funnel interest for identity verification."
+    }
+  },
+  {
+    "event_id": "demo-e2",
+    "tenant_id": "T1",
+    "session_id": "S1",
+    "feature_id": "KYC",
+    "event_type": "FEATURE_SUCCESS",
+    "timestamp": "2026-01-01T10:01:00",
+    "metadata": {
+      "story": "KYC completion rates improved after adding inline document examples; invest in similar guidance for loan document upload."
+    }
+  },
+  {
+    "event_id": "demo-e3",
+    "tenant_id": "T1",
+    "session_id": "S1",
+    "feature_id": "LOAN",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-01T10:02:00",
+    "metadata": {
+      "story": "Loan module opens correlate with completed KYC; next quarter prioritize repayment schedule clarity and mobile UX."
+    }
+  },
+  {
+    "event_id": "demo-e4",
+    "tenant_id": "T2",
+    "session_id": "S2",
+    "feature_id": "KYC",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-01T11:00:00",
+    "metadata": { "story": "Peer tenant shows friction at KYC failure path; training cohort reduced repeat failures." }
+  },
+  {
+    "event_id": "demo-e5",
+    "tenant_id": "T2",
+    "session_id": "S2",
+    "feature_id": "KYC",
+    "event_type": "FEATURE_FAIL",
+    "timestamp": "2026-01-01T11:01:00",
+    "metadata": { "story": "Failure spike after policy text change; recommend A/B test on eligibility copy." }
+  },
+  {
+    "event_id": "demo-e6",
+    "tenant_id": "T3",
+    "session_id": "S3",
+    "feature_id": "KYC",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-01T12:00:00",
+    "metadata": { "story": "FOIA module adoption below baseline; expand onboarding checklist similar to KYC rollout." }
+  },
+  {
+    "event_id": "demo-e7",
+    "tenant_id": "T3",
+    "session_id": "S3",
+    "feature_id": "LOAN",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-01T12:01:00",
+    "metadata": { "story": "Document upload step shows highest drop-off; investment in guided upload yields best ROI." }
+  },
+  {
+    "event_id": "demo-e8",
+    "tenant_id": "T1",
+    "session_id": "S4",
+    "feature_id": "PERMITS",
+    "event_type": "JOURNEY_STEP",
+    "timestamp": "2026-01-02T09:00:00",
+    "metadata": { "story": "Permit applicants stall at fee payment step when card errors are generic; clearer error codes reduced abandon by 6% in pilot." }
+  },
+  {
+    "event_id": "demo-e9",
+    "tenant_id": "T1",
+    "session_id": "S5",
+    "feature_id": "FOIA",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-02T10:15:00",
+    "metadata": { "story": "FOIA request form sees repeat opens without submit; users may be unsure about fee waivers — add explainer tooltip." }
+  },
+  {
+    "event_id": "demo-e10",
+    "tenant_id": "T2",
+    "session_id": "S6",
+    "feature_id": "PAYMENTS",
+    "event_type": "FEATURE_SUCCESS",
+    "timestamp": "2026-01-03T14:20:00",
+    "metadata": { "story": "Payment success rate stays above 99% after gateway failover drill; no citizen-facing degradation." }
+  },
+  {
+    "event_id": "demo-e11",
+    "tenant_id": "T3",
+    "session_id": "S7",
+    "feature_id": "BENEFITS",
+    "event_type": "FORM_SUBMIT",
+    "timestamp": "2026-01-04T08:30:00",
+    "metadata": { "story": "Benefits recertification completions rise when SMS reminders include deep link to saved draft." }
+  },
+  {
+    "event_id": "demo-e12",
+    "tenant_id": "T1",
+    "session_id": "S8",
+    "feature_id": "MOBILE",
+    "event_type": "PAGE_VIEW",
+    "timestamp": "2026-01-05T16:45:00",
+    "metadata": { "story": "Mobile web sessions for case status exceed desktop on weekends; prioritize responsive tables in case management." }
+  },
+  {
+    "event_id": "demo-e13",
+    "tenant_id": "T2",
+    "session_id": "S9",
+    "feature_id": "API",
+    "event_type": "API_CALL",
+    "timestamp": "2026-01-06T11:05:00",
+    "metadata": { "story": "Eligibility API p95 latency improved 18% after connection pool tuning; fewer timeout retries in journey logs." }
+  },
+  {
+    "event_id": "demo-e14",
+    "tenant_id": "T3",
+    "session_id": "S10",
+    "feature_id": "GRANTS",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-07T09:50:00",
+    "metadata": { "story": "Grants reporting module usage clusters at month-end; offer scheduled export to spread load." }
+  },
+  {
+    "event_id": "demo-e15",
+    "tenant_id": "T1",
+    "session_id": "S11",
+    "feature_id": "LOAN",
+    "event_type": "JOURNEY_STEP",
+    "timestamp": "2026-01-08T13:00:00",
+    "metadata": { "story": "Loan journey: users who upload documents within first session complete 22% more often than multi-session starters." }
+  },
+  {
+    "event_id": "demo-e16",
+    "tenant_id": "T2",
+    "session_id": "S12",
+    "feature_id": "RECORDS",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-09T10:20:00",
+    "metadata": { "story": "Vital records traffic spikes after holiday closures; proactive banner reduced duplicate submissions." }
+  },
+  {
+    "event_id": "demo-e17",
+    "tenant_id": "T3",
+    "session_id": "S13",
+    "feature_id": "HOUSING",
+    "event_type": "FORM_SUBMIT",
+    "timestamp": "2026-01-10T15:40:00",
+    "metadata": { "story": "Housing assistance intake shows lower errors when address autocomplete is enabled for all jurisdictions." }
+  },
+  {
+    "event_id": "demo-e18",
+    "tenant_id": "T1",
+    "session_id": "S14",
+    "feature_id": "OPEN_DATA",
+    "event_type": "PAGE_VIEW",
+    "timestamp": "2026-01-11T12:10:00",
+    "metadata": { "story": "Open data catalog views correlate with press releases; sustained use needs curriculum tie-ins with schools." }
+  },
+  {
+    "event_id": "demo-e19",
+    "tenant_id": "T2",
+    "session_id": "S15",
+    "feature_id": "CASE_MGMT",
+    "event_type": "FEATURE_OPEN",
+    "timestamp": "2026-01-12T08:55:00",
+    "metadata": { "story": "Case workers reopen same records repeatedly; saved filter presets cut median session time." }
+  },
+  {
+    "event_id": "demo-e20",
+    "tenant_id": "T3",
+    "session_id": "S16",
+    "feature_id": "KYC",
+    "event_type": "FEATURE_SUCCESS",
+    "timestamp": "2026-01-13T09:30:00",
+    "metadata": { "story": "Video verify option lifted completion for elderly cohort without increasing fraud flags in manual review." }
+  },
+  {
+    "event_id": "demo-e21",
+    "tenant_id": "T1",
+    "session_id": "S17",
+    "feature_id": "LOAN",
+    "event_type": "FEATURE_FAIL",
+    "timestamp": "2026-01-14T14:00:00",
+    "metadata": { "story": "OCR rejects on handwritten forms spike; recommend accept-photo fallback messaging at upload." }
+  },
+  {
+    "event_id": "demo-e22",
+    "tenant_id": "T2",
+    "session_id": "S18",
+    "feature_id": "FOIA",
+    "event_type": "FORM_SUBMIT",
+    "timestamp": "2026-01-15T11:25:00",
+    "metadata": { "story": "FOIA bulk request tool adoption doubled after 15-minute webinar; replicate for permits module." }
+  },
+  {
+    "event_id": "demo-e23",
+    "tenant_id": "T3",
+    "session_id": "S19",
+    "feature_id": "WORKFORCE",
+    "event_type": "PAGE_VIEW",
+    "timestamp": "2026-01-16T17:00:00",
+    "metadata": { "story": "Jobs board search refinements (salary band) increased apply clicks without extra support tickets." }
+  },
+  {
+    "event_id": "demo-e24",
+    "tenant_id": "T1",
+    "session_id": "S20",
+    "feature_id": "CONSENT",
+    "event_type": "OTHER",
+    "timestamp": "2026-01-17T08:00:00",
+    "metadata": { "story": "Consent banner v2.3: opt-in rate stable; no measurable drop in authenticated session starts." }
+  },
+  {
+    "event_id": "demo-e25",
+    "tenant_id": "T2",
+    "session_id": "S21",
+    "feature_id": "PERMITS",
+    "event_type": "FEATURE_SUCCESS",
+    "timestamp": "2026-01-18T10:45:00",
+    "metadata": { "story": "Same-day permit issuance pilot cut counter visits; chatbot handoff to human still needed for complex variances." }
+  }
 ]

@@ -1,31 +1,53 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "InsightOS Event Schema",
-  "type": "object",
-  "required": ["tenant_id", "feature_id", "event_type", "timestamp", "session_id"],
-  "properties": {
-    "tenant_id": {
-      "type": "string",
-      "minLength": 1
-    },
-    "feature_id": {
-      "type": "string",
-      "minLength": 1
-    },
-    "event_type": {
-      "type": "string",
-      "enum": ["FEATURE_OPEN", "FEATURE_SUCCESS", "FEATURE_FAIL"]
-    },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "session_id": {
-      "type": "string"
-    },
-    "metadata": {
+  "title": "InsightOS Event Schema (canonical + SDK)",
+  "oneOf": [
+    {
+      "title": "Canonical (API / storage)",
       "type": "object",
-      "additionalProperties": true
+      "required": ["tenant_id", "feature_id", "event_type", "timestamp", "session_id"],
+      "properties": {
+        "tenant_id": { "type": "string", "minLength": 1 },
+        "feature_id": { "type": "string", "minLength": 1 },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "FEATURE_OPEN",
+            "FEATURE_SUCCESS",
+            "FEATURE_FAIL",
+            "FEATURE_ABANDON",
+            "JOURNEY_START",
+            "JOURNEY_STEP",
+            "JOURNEY_DROP",
+            "JOURNEY_COMPLETE",
+            "API_CALL",
+            "PAGE_VIEW",
+            "BATCH_TRIGGER"
+          ]
+        },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "session_id": { "type": "string", "minLength": 1 },
+        "event_id": { "type": "string" },
+        "metadata": { "type": "object", "additionalProperties": true }
+      }
+    },
+    {
+      "title": "Ghost SDK (camelCase)",
+      "type": "object",
+      "required": ["tenantId", "featureModule", "eventType", "timestamp", "sessionId"],
+      "properties": {
+        "eventId": { "type": "string" },
+        "tenantId": { "type": "string", "minLength": 1 },
+        "featureModule": { "type": "string", "minLength": 1 },
+        "eventType": { "type": "string" },
+        "sessionId": { "type": "string", "minLength": 1 },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "channel": { "type": "string" },
+        "journeyId": { "type": ["string", "null"] },
+        "journeyStep": { "type": ["string", "null"] },
+        "sdkVersion": { "type": "string" },
+        "metadata": { "type": "object", "additionalProperties": true }
+      }
     }
-  }
+  ]
 }

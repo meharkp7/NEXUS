@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NEXUS Role-Based Access Control Configuration",
+  "description": "Synced with infra-gateway/security/rbac_config.json — AI Brain enforces X-NEXUS-Role when NEXUS_RBAC_ENFORCE=true.",
+  "version": "1.0.0",
+  "roles": {
+    "NEXUS_PRODUCT_MANAGER": {
+      "permissions": [
+        "dashboard:view_adoption_heatmaps",
+        "dashboard:view_journey_funnels",
+        "dashboard:view_zombie_features",
+        "dashboard:view_roi_calculator",
+        "ai_advisor:view_recommendations",
+        "ai_advisor:run_simulations",
+        "telemetry:view_audit_log",
+        "telemetry:ingest",
+        "governance:view_consent_status"
+      ],
+      "forbidden": ["governance:toggle_telemetry_consent"]
+    },
+    "NEXUS_SALES": {
+      "permissions": [
+        "dashboard:view_adoption_heatmaps",
+        "dashboard:view_zombie_features",
+        "ai_advisor:view_upsell_recommendations",
+        "ai_advisor:view_recommendations",
+        "telemetry:ingest",
+        "governance:view_consent_status"
+      ],
+      "forbidden": ["dashboard:view_journey_funnels", "ai_advisor:run_simulations"]
+    },
+    "NEXUS_COMPLIANCE": {
+      "permissions": [
+        "telemetry:view_audit_log",
+        "governance:view_consent_status",
+        "telemetry:ingest"
+      ],
+      "forbidden": ["dashboard:view_adoption_heatmaps", "dashboard:view_journey_funnels"]
+    },
+    "NEXUS_TENANT_ADMIN": {
+      "permissions": [
+        "dashboard:view_adoption_heatmaps",
+        "dashboard:view_journey_funnels",
+        "ai_advisor:view_recommendations",
+        "governance:toggle_telemetry_consent",
+        "governance:view_consent_status",
+        "telemetry:view_audit_log",
+        "telemetry:ingest"
+      ],
+      "forbidden": ["ai_advisor:run_simulations"]
+    },
+    "NEXUS_SUPER_ADMIN": {
+      "permissions": ["*"],
+      "forbidden": []
+    }
+  }
+}

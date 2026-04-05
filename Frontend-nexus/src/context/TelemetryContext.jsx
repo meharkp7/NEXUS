@@ -1,14 +1,10 @@
-
-
 import React, { createContext, useContext, useEffect, useState } from "react";
-import GhostSDK from "../sdk/ghost-sdk.js";
-import { CHANNEL } from "../sdk/feature-taxonomy.js";
-import { installRouteTracker } from "../sdk/tracking-wrapper.jsx";
-
-
+import GhostSDK from "@nexus/collector-sdk";
+import { CHANNEL, maskTenantId } from "@nexus/collector-sdk";
+import { installRouteTracker } from "../tracking/tracking-wrapper.jsx";
+import { emitEvents } from "../services/api.js";
 
 const TelemetryContext = createContext(null);
-
 
 export function TelemetryProvider({ tenantId, consentGranted, children }) {
   const [sdkStatus, setSdkStatus] = useState(null);
@@ -17,16 +13,42 @@ export function TelemetryProvider({ tenantId, consentGranted, children }) {
     let initialized = false;
 
     async function bootstrap() {
-      await GhostSDK.init({
-        tenantId,
-        channel: CHANNEL.WEB,
-        consentGranted,
-        debug: import.meta.env.DEV, // Enable debug logs in development
-      });
-
-      installRouteTracker();
-      initialized = true;
-      setSdkStatus(GhostSDK.getStatus());
+      try {
+        await GhostSDK.init({
+          tenantId,
+          channel: CHANNEL.WEB,
+          consentGranted,
+          emitEvents,
+          debug: import.meta.env.DEV,
+        });
+        installRouteTracker();
+        initialized = true;
+        setSdkStatus(GhostSDK.getStatus());
+      } catch (e) {
+        console.error("[Telemetry] GhostSDK init failed:", e);
+        try {
+          const mid = await maskTenantId(tenantId);
+          setSdkStatus({
+            initialized: false,
+            consentGranted,
+            maskedTenantId: mid,
+            sessionId: null,
+            bufferedEvents: 0,
+            circuitBreakerOpen: false,
+            activeJourneys: 0,
+          });
+        } catch {
+          setSdkStatus({
+            initialized: false,
+            consentGranted,
+            maskedTenantId: null,
+            sessionId: null,
+            bufferedEvents: 0,
+            circuitBreakerOpen: false,
+            activeJourneys: 0,
+          });
+        }
+      }
     }
 
     bootstrap();
@@ -34,9 +56,8 @@ export function TelemetryProvider({ tenantId, consentGranted, children }) {
     return () => {
       if (initialized) GhostSDK.destroy();
     };
-  }, [tenantId]); // Re-init on tenant change (e.g., admin switching tenants)
+  }, [tenantId]);
 
-  // Keep consent in sync when parent updates (e.g., user changes settings)
   useEffect(() => {
     GhostSDK.setConsent(consentGranted);
     setSdkStatus(GhostSDK.getStatus());
@@ -48,7 +69,6 @@ export function TelemetryProvider({ tenantId, consentGranted, children }) {
     </TelemetryContext.Provider>
   );
 }
-
 
 export function useTelemetry() {
   const ctx = useContext(TelemetryContext);

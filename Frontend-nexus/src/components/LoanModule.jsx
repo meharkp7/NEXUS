@@ -1,7 +1,7 @@
 
 
 import React, { useState } from "react";
-import { withFeatureTracking, wrapAPICall } from "../sdk/tracking-wrapper.js";
+import { withFeatureTracking, wrapAPICall } from "../tracking/tracking-wrapper.jsx";
 import { useFeatureTelemetry, useJourneyTelemetry, FEATURE_MODULE, JOURNEY } from "../hooks/useTelemetry.js";
 
 // ─── Pattern 1: HOC Wrapping (recommended for existing components) ─────────────

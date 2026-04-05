@@ -221,7 +221,10 @@ class TelemetryEvent(BaseModel):
     tenant_id: str = Field(..., pattern=r"^TNT-[A-Z0-9]{6}$")
     session_id: str
     user_hash: Optional[str] = None
-    event_type: str = Field(..., pattern=r"^(FEATURE_OPEN|FEATURE_SUCCESS|FEATURE_FAIL|FEATURE_ABANDON|PAGE_VIEW|API_CALL)$")
+    event_type: str = Field(
+        ...,
+        pattern=r"^(FEATURE_OPEN|FEATURE_SUCCESS|FEATURE_FAIL|FEATURE_ABANDON|PAGE_VIEW|API_CALL|JOURNEY_START|JOURNEY_STEP|JOURNEY_DROP|JOURNEY_COMPLETE)$",
+    )
     feature_id: str
     feature_module: Optional[str] = None
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())

@@ -1,14 +1,10 @@
-
-
 import React, { Component, useEffect, useRef } from "react";
-import GhostSDK from "./ghost-sdk.js";
-import { EVENT_TYPE, FEATURE_MODULE } from "./feature-taxonomy.js";
-
+import GhostSDK from "@nexus/collector-sdk";
+import { EVENT_TYPE, FEATURE_MODULE } from "@nexus/collector-sdk";
 
 export function withFeatureTracking(WrappedComponent, featureModule, options = {}) {
   const displayName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
-  
   class TrackingErrorBoundary extends Component {
     constructor(props) {
       super(props);
@@ -21,7 +17,7 @@ export function withFeatureTracking(WrappedComponent, featureModule, options = {
 
     componentDidCatch(error) {
       GhostSDK.trackFailure(featureModule, {
-        errorMessage: error.message?.slice(0, 100), // Truncate to avoid PII in stack traces
+        errorMessage: error.message?.slice(0, 100),
         componentName: displayName,
         ...options,
       });
@@ -39,11 +35,9 @@ export function withFeatureTracking(WrappedComponent, featureModule, options = {
     }
   }
 
-  
   function TrackedComponent(props) {
     const mountTime = useRef(Date.now());
 
-    // FEATURE_OPEN — fires when component mounts (user navigates to feature)
     useEffect(() => {
       GhostSDK.trackOpen(featureModule, {
         componentName: displayName,
@@ -51,8 +45,6 @@ export function withFeatureTracking(WrappedComponent, featureModule, options = {
         journeyStep: options.journeyStep,
       });
 
-      // FEATURE_SUCCESS — fires when component unmounts cleanly (user completed interaction)
-      // A clean unmount after >2s is treated as a successful engagement
       return () => {
         const sessionDuration = Date.now() - mountTime.current;
         if (sessionDuration > 2000) {
@@ -62,7 +54,7 @@ export function withFeatureTracking(WrappedComponent, featureModule, options = {
           });
         }
       };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
       <TrackingErrorBoundary>
@@ -74,7 +66,6 @@ export function withFeatureTracking(WrappedComponent, featureModule, options = {
   TrackedComponent.displayName = `Tracked(${displayName})`;
   return TrackedComponent;
 }
-
 
 export function wrapAPICall(fn, featureModule, metadata = {}) {
   return async function intercepted(...args) {
@@ -93,25 +84,22 @@ export function wrapAPICall(fn, featureModule, metadata = {}) {
         durationMs: Date.now() - startTime,
         functionName: fn.name,
         errorCode: error?.code || error?.status || "UNKNOWN",
-        // Note: Never pass error.message directly — it may contain PII
       });
-      throw error; // Re-throw so caller's error handling still works
+      throw error;
     }
   };
 }
 
-
 export const ROUTE_FEATURE_MAP = [
-  { pattern: /\/loans\/apply/,        module: FEATURE_MODULE.LOAN_ORIGINATION },
-  { pattern: /\/loans\/review/,       module: FEATURE_MODULE.LOAN_ORIGINATION },
-  { pattern: /\/documents/,           module: FEATURE_MODULE.DOCUMENT_MANAGEMENT },
-  { pattern: /\/risk/,                module: FEATURE_MODULE.RISK_ASSESSMENT },
-  { pattern: /\/compliance/,          module: FEATURE_MODULE.COMPLIANCE_CHECK },
-  { pattern: /\/repayment/,           module: FEATURE_MODULE.REPAYMENT_SCHEDULE },
-  { pattern: /\/reports/,             module: FEATURE_MODULE.REPORTING_DASHBOARD },
-  { pattern: /\/tenants/,             module: FEATURE_MODULE.TENANT_MANAGEMENT },
+  { pattern: /\/loans\/apply/, module: FEATURE_MODULE.LOAN_ORIGINATION },
+  { pattern: /\/loans\/review/, module: FEATURE_MODULE.LOAN_ORIGINATION },
+  { pattern: /\/documents/, module: FEATURE_MODULE.DOCUMENT_MANAGEMENT },
+  { pattern: /\/risk/, module: FEATURE_MODULE.RISK_ASSESSMENT },
+  { pattern: /\/compliance/, module: FEATURE_MODULE.COMPLIANCE_CHECK },
+  { pattern: /\/repayment/, module: FEATURE_MODULE.REPAYMENT_SCHEDULE },
+  { pattern: /\/reports/, module: FEATURE_MODULE.REPORTING_DASHBOARD },
+  { pattern: /\/tenants/, module: FEATURE_MODULE.TENANT_MANAGEMENT },
 ];
-
 
 export function resolveFeatureFromRoute(pathname) {
   for (const { pattern, module } of ROUTE_FEATURE_MAP) {
@@ -119,7 +107,6 @@ export function resolveFeatureFromRoute(pathname) {
   }
   return null;
 }
-
 
 export function installRouteTracker() {
   const trackRoute = () => {
@@ -133,16 +120,11 @@ export function installRouteTracker() {
     }
   };
 
-  // Intercept browser back/forward
   window.addEventListener("popstate", trackRoute);
-
-  // Intercept React Router programmatic navigation (pushState)
   const origPushState = history.pushState.bind(history);
   history.pushState = function (...args) {
     origPushState(...args);
     trackRoute();
   };
-
-  // Track initial page load
   trackRoute();
 }

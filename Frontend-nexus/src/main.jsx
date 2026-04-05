@@ -1,18 +1,16 @@
-
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { TelemetryProvider } from "./context/TelemetryContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { initTracing } from "./tracing.js";
+import "./dashboard/dashboard.css";
 
-// In real app: get tenantId and consent from your auth system (JWT claims, settings API)
-const TENANT_ID = import.meta.env.VITE_TENANT_ID || "demo_tenant_001";
-const CONSENT_GRANTED = true; // Pull from user settings in production
+initTracing();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <TelemetryProvider tenantId={TENANT_ID} consentGranted={CONSENT_GRANTED}>
+    <AuthProvider>
       <App />
-    </TelemetryProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

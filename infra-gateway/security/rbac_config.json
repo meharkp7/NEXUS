@@ -65,6 +65,7 @@
       "permissions": [
         "dashboard:view_adoption_heatmaps",
         "dashboard:view_journey_funnels",
+        "ai_advisor:view_recommendations",
         "governance:toggle_telemetry_consent",
         "governance:view_consent_status",
         "telemetry:view_audit_log"
